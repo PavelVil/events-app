@@ -1,0 +1,322 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-tables
+      author: pavelvil
+      changes:
+        - createTable:
+            tableName: usr
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+              - column:
+                  name: email
+                  type: varchar(255)
+                  constraints:
+                    unique: true
+              - column:
+                  name: first_name
+                  type: varchar(255)
+              - column:
+                  name: last_name
+                  type: varchar(255)
+              - column:
+                  name: password
+                  type: varchar(255)
+              - column:
+                  name: username
+                  type: varchar(255)
+                  constraints:
+                    unique: true
+
+        - createTable:
+            tableName: user_roles
+            columns:
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    referencedTableName: usr
+                    referencedColumnNames: id
+                    foreignKeyName: fk_user_roles_user_id
+              - column:
+                  name: roles
+                  type: varchar(255)
+        - addUniqueConstraint:
+            columnNames: user_id, roles
+            constraintName: usr_role_unique
+            tableName: user_roles
+        - createTable:
+            tableName: organization
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    unique: true
+              - column:
+                  name: owner_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    referencedTableName: usr
+                    referencedColumnNames: id
+                    foreignKeyName: fk_org_owner_id
+
+        - createTable:
+            tableName: category
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    unique: true
+
+        - createTable:
+            tableName: user_organization_subscription
+            columns:
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    referencedTableName: usr
+                    referencedColumnNames: id
+                    foreignKeyName: fk_user_org_sub_user_id
+              - column:
+                  name: organization_id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    referencedTableName: organization
+                    referencedColumnNames: id
+                    foreignKeyName: fk_user_org_sub_org_id
+
+        - createTable:
+            tableName: user_category_subscription
+            columns:
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    referencedTableName: usr
+                    referencedColumnNames: id
+                    foreignKeyName: fk_user_cat_sub_user_id
+              - column:
+                  name: category_id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    referencedTableName: category
+                    referencedColumnNames: id
+                    foreignKeyName: fk_user_cat_sub_cat_id
+
+        - createTable:
+            tableName: schedule
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+              - column:
+                  name: description
+                  type: varchar(255)
+
+        - createTable:
+            tableName: location
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+              - column:
+                  name: city
+                  type: varchar(255)
+              - column:
+                  name: street
+                  type: varchar(255)
+
+        - createTable:
+            tableName: event
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+              - column:
+                  name: end_time
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: start_time
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: location_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    referencedTableName: location
+                    referencedColumnNames: id
+                    foreignKeyName: fk_event_location_id
+              - column:
+                  name: organization_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    referencedTableName: organization
+                    referencedColumnNames: id
+                    foreignKeyName: fk_event_org_id
+              - column:
+                  name: schedule_id
+                  type: bigint
+                  constraints:
+                    unique: true
+                    nullable: false
+                    referencedTableName: schedule
+                    referencedColumnNames: id
+                    foreignKeyName: fk_event_schedule_id
+
+        - createTable:
+            tableName: comment
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+              - column:
+                  name: text
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: event_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    referencedTableName: event
+                    referencedColumnNames: id
+                    foreignKeyName: fk_comment_event_id
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    referencedTableName: usr
+                    referencedColumnNames: id
+                    foreignKeyName: fk_comment_user_id
+
+        - createTable:
+            tableName: events_participants
+            columns:
+              - column:
+                  name: event_id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    referencedTableName: event
+                    referencedColumnNames: id
+                    foreignKeyName: fk_evt_part_event_id
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    referencedTableName: usr
+                    referencedColumnNames: id
+                    foreignKeyName: fk_evt_part_user_id
+
+        - createTable:
+            tableName: event_categories
+            columns:
+              - column:
+                  name: event_id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    referencedTableName: event
+                    referencedColumnNames: id
+                    foreignKeyName: fk_evt_cat_event_id
+              - column:
+                  name: category_id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    referencedTableName: category
+                    referencedColumnNames: id
+                    foreignKeyName: fk_evt_cat_cat_id

@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-categories
+      author: pavelvil
+      changes:
+        - insert:
+            tableName: category
+            columns:
+              - column:
+                  name: created_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: name
+                  value: Cinema
+        - insert:
+            tableName: category
+            columns:
+              - column:
+                  name: created_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: name
+                  value: Music
